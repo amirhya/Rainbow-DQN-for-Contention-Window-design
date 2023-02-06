@@ -72,7 +72,7 @@ for i in range(numEpisodes):
 			transitionFlag = False
 		# print('Node 0 CW = ',node0CW,'Other CW = ',otherCW)
 		key = str(node0CW)+'+'+str(otherCW)
-		data = random.choice(env.dict[key])
+		data = random.choice(env.dataset[key])
 		
 		r = 1-data[-1]
 		reward+=(gamma**count)*r

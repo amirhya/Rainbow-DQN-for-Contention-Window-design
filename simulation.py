@@ -6,7 +6,7 @@ from gen_dataset import *
 #from envBuilder import *
 
 class commEnv:
-    def __init__(self,n,ps,transitionModel,action_dict,other_action_dict,eplen,history=0):
+    def __init__(self,n,ps,transitionModel,action_dict,other_action_dict, eplen, history=0):
         """
         args: T     - Simulation time in seconds
               N     - Number of nodes in the network
@@ -16,6 +16,7 @@ class commEnv:
               L     - maximum length of message
         
         """
+
         self.n = n
         self.transitionModel = transitionModel
         self.ps = ps    
@@ -28,7 +29,7 @@ class commEnv:
         #?
         self.numTestMethod = 4
         #?
-        self.dict = genDataset(n)
+        self.dataset = genDataset(n)
 
         baseFolder = './Dataset/dataStats/'+str(n)+'Node/'
         self.data_mean = np.loadtxt(baseFolder+'data_mean.txt',delimiter = ',')
@@ -55,12 +56,11 @@ class commEnv:
         reward = (1-rhoOmegaDiff)
         return reward 
 
-
     def reset(self):
         self.countSteps = 0 
         self.otherActionIndex = random.choice(list(self.otherActionDict.keys()))
         ##randomly select a  [node1RxPackets[k],otherRxPackets[k],cw1List[i],reward[k]] from sample size number of them
-        stateRaw = random.choice(self.dict[str(random.choice(self.actionDict))+'+'+str(self.otherActionDict[self.otherActionIndex])])
+        stateRaw = random.choice(self.dataset[str(random.choice(self.actionDict)) + '+' + str(self.otherActionDict[self.otherActionIndex])])
         stateNormalized = self.preProcess(np.asarray(stateRaw[0:self.dimState]))
 
         if self.historyFlag:
@@ -80,7 +80,7 @@ class commEnv:
         # print('Key = ',self.otherActionIndex)
         key = str(self.actionDict[a])+'+'+str(self.otherActionDict[self.otherActionIndex])
 
-        next_state_full = random.choice(self.dict[key])        
+        next_state_full = random.choice(self.dataset[key])
         next_state_normalized = self.preProcess(np.asarray(next_state_full[0:self.dimState]))
         
         done = False
@@ -106,7 +106,7 @@ class commEnv:
             self.countIteration = 0
             self.countIterationflag = False
         """
-        if (self.countSteps >= self.countStepsMax):
+        if self.countSteps >= self.countStepsMax:
             done = True
             #self.countIteration = 0
             #self.countIterationflag = False
@@ -135,7 +135,7 @@ class commEnv:
 
         for i in range(len(aVecUnique)):
             key = str(self.actionDict[aVecUnique[i]])+'+'+str(self.otherActionDict[self.otherActionIndex])
-            next_state_full = random.choice(self.dict[key])
+            next_state_full = random.choice(self.dataset[key])
 
             next_state = self.preProcess(np.asarray(next_state_full[0:self.dimState]))
             reward = self.computeReward(next_state_full[-1])
@@ -172,10 +172,13 @@ class commEnv:
         return stateOut,rewardOut,done,info 
         
     def change_env_state(self):
+        #simple markovian scenario
         if self.transitionModel == "Markovian":
             p = np.random.uniform(0,1,1)
             if p < self.ps+0.01:
-                self.otherActionIndex = not(self.otherActionIndex)
+                self.otherActionIndex = not self.otherActionIndex
+
+        ##more complicated dynamic scenario
         elif self.transitionModel == "NonMarkovian":
             p = np.random.uniform(0,1,1)
             if self.incrementFlag:

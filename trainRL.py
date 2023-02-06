@@ -1,3 +1,10 @@
+'''
+500/5000 episodes
+50 time steps
+buufer size for experience replay 10_000
+
+'''
+
 import math, random
 from simulation import *
 #import gym
@@ -93,6 +100,7 @@ for frame_idx in range(1, num_frames + 1):
     state = next_state
     #print(cw_min)
     episode_reward += reward
+    #episode finishes
     if done:
         print('Frame = ',frame_idx,'Reward = ',episode_reward)
         state= env.reset()
@@ -100,9 +108,9 @@ for frame_idx in range(1, num_frames + 1):
         episode_reward = 0
     
     if len(replay_buffer) > batch_size:
-        #print('======================================= Start Training =========================================')
+        print('======================================= Start Training =========================================')
         loss = compute_td_loss(batch_size,replay_buffer,Vmax,Vmin,num_atoms,current_model,target_model,optimizer)
-        #print(loss)
+        print(loss)
         losses.append(loss.data)
     #if frame_idx % 200 == 0:
     #    plot(frame_idx, all_rewards, losses)

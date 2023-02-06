@@ -17,9 +17,8 @@ def envBuilder(n,ps,transitionModel,history):
 
     if transitionModel == "Markovian":
         actions = [32,48,64,96,128]
-        # num_action = len(actions)
-        for i in range(len(actions)):
-            actionDict[i]=actions[i]
+        # for i in range(len(actions)):
+        #     actionDict[i]=actions[i]
 
         otherActions = [32,128]
         for i in range(len(otherActions)):
