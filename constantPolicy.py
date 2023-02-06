@@ -15,7 +15,7 @@ def maxRewardConstantAction(env,numExamples):
 
             # print('Node 0 CW = ',node0CW,' Other CW = ',otherCW)
             key = str(node0CW)+'+'+str(otherCW)
-            data = np.asarray(env.dict[key])
+            data = np.asarray(env.dataset[key])
             r = 1-data[:,-1]
             totalReward.append(np.mean(r))
         rewardList.append(np.mean(totalReward))
@@ -64,12 +64,12 @@ print('Best Constant Policy Action for' , transitionModel2,' Transition:','index
 
 #     for i in range(len(env.actionDict)):
 #         key = str(env.actionDict[i])+'+'+str(env.otherActionDict[currentOtherIndex])
-#         data = env.dict[key]
+#         data = env.dataset[key]
 #         data = np.asarray(data) 
 #         sameStateReward.append(1-np.mean(data[:,-1]))
 
 #         key = str(env.actionDict[i])+'+'+str(env.otherActionDict[nextPossibleOtherIndex])
-#         data = env.dict[key]
+#         data = env.dataset[key]
 #         data = np.asarray(data) 
 #         changeStateReward.append(1-np.mean(data[:,-1]))
 

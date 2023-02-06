@@ -27,12 +27,12 @@ def computeOptAction(env):
 
     for i in range(len(env.actionDict)):
         key = str(env.actionDict[i])+'+'+str(env.otherActionDict[currentOtherIndex])
-        data = env.dict[key]
+        data = env.dataset[key]
         data = np.asarray(data) 
         sameStateReward.append(1-np.mean(data[:,-1]))
 
         key = str(env.actionDict[i])+'+'+str(env.otherActionDict[nextPossibleOtherIndex])
-        data = env.dict[key]
+        data = env.dataset[key]
         data = np.asarray(data) 
         changeStateReward.append(1-np.mean(data[:,-1]))
 

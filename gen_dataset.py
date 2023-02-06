@@ -6,13 +6,16 @@ import pdb
 
 def genDataset(n):
     '''
-    output (data_dict) a dictionary
+    output (data_dict) a dictionary. Includes simulationSize number of simulated results for a
+    specific set of CWmin selections
+
     '''
     n = n
 
     # For computing reward
-    sampleSize = 500
-    omega = (1.0/n)*np.ones((sampleSize))
+    #sampleSize = 500
+    simulationSize =500
+    omega = (1.0/n)*np.ones(simulationSize)
 
     cw1List = [32,48,64,96,128,192,256,384,512]
     cw2List = [32,64,128,256,512]
@@ -22,6 +25,11 @@ def genDataset(n):
     data_dict = dict()
 
     dataFolder = str(n)+'Node'
+
+    # TODO: include interface to ns-3 simulator
+    # txPacketsRxPackets, rxPackets=ns3Simulate(CWmins)
+
+
     for i in range(actionDim):
         for j in range(len(cw2List)):
             
@@ -38,7 +46,7 @@ def genDataset(n):
             reward = np.abs(rho-omega)
             
             dataset= []
-            for k in range(sampleSize):
+            for k in range(simulationSize):
                 dataTemp = [node1RxPackets[k],otherRxPackets[k],cw1List[i],reward[k]]
                 dataset.append(dataTemp)
 
